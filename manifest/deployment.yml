@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hydrus-dev-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx-pod
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx-pod
+    spec:
+      containers:
+      - name: nginx
+        image: faizul56/ameer:v1
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 500m
+            memory: 128Mi
+          limits:
+            cpu: 600m
+            memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hydrus-dev-pod-service
+spec:
+  selector:
+    app: nginx-pod
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 30008
